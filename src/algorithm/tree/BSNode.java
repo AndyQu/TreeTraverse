@@ -1,28 +1,35 @@
 package algorithm.tree;
 
-public class BSNode {
-    private BSNode left=null;
-    private BSNode right=null;
-    private Comparable<Object>value=null;
-    public BSNode(Comparable<Object>v){
+public class BSNode<E> implements BinaryNode<E>{
+    private BinaryNode<E> left=null;
+    private BinaryNode<E> right=null;
+    private Comparable<E>value=null;
+    public BSNode(Comparable<E>v){
         value=v;
     }
-    public BSNode getLeft() {
+    @Override
+    public BinaryNode<E> getLeft() {
         return left;
     }
-    public void setLeft(BSNode left) {
+    @Override
+    public void setLeft(BinaryNode<E> left) {
         this.left = left;
     }
-    public BSNode getRight() {
+    @Override
+    public BinaryNode<E> getRight() {
         return right;
     }
-    public void setRight(BSNode right) {
+    @Override
+    public void setRight(BinaryNode<E> right) {
         this.right = right;
     }
-    public Comparable<Object> getValue() {
+    public Comparable<E> getValue() {
         return value;
     }
-    public void setValue(Comparable<Object> value) {
+    public void setValue(Comparable<E> value) {
         this.value = value;
+    }
+    public String toString(){
+        return value.toString();
     }
 }
