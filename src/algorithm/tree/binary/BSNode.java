@@ -1,4 +1,4 @@
-package algorithm.tree;
+package algorithm.tree.binary;
 
 public class BSNode<E> implements BinaryNode<E>{
     private BinaryNode<E> left=null;

@@ -1,4 +1,4 @@
-package algorithm.tree;
+package algorithm.tree.binary;
 
 import andy.util.Log;
 
@@ -57,6 +57,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * If A has both left and right child trees, then the replace node should be A's left biggest node.
      * 
      * So the replace node is not always the left biggest node.
+     * 
+     * use the replace node to replace the deleted node, and use "parent" to link it.
      * @param v
      */
     public void delete(E v) {
@@ -77,7 +79,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
                     result.biggest.setRight(cursor.getRight());
                     replace = result.biggest;
                 }
-                if (parent == null) {
+                if (cursor == root) {//parent must be null;
                     root = (BSNode<E>) replace;
                 } else {
                     if (parent.getLeft() == cursor) {

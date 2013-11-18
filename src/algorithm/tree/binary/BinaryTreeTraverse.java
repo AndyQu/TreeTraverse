@@ -1,4 +1,4 @@
-package algorithm.tree;
+package algorithm.tree.binary;
 
 import andy.util.Log;
 
