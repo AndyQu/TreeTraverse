@@ -1,50 +1,53 @@
 package algorithm.tree.binary;
 
+import algorithm.tree.binary.interfaces.BSearchNode;
 import algorithm.tree.binary.interfaces.BinaryNode;
 import algorithm.tree.binary.interfaces.BinarySearchTree;
 import andy.util.Log;
 
 public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySearchTree<E>{
-    private BSNode<E> root = null;
+    private BSearchNode<E> root = null;
 
     public BinarySearchTreeNorm() {
     }
 
+    @Override
     public void insert(E v) {
         if (root == null) {
-            root = new BSNode<E>(v);
+            root = new BSearchNode<E>(v);
         }
-        BSNode<E> cursor = root;
+        BSearchNode<E> cursor = root;
         while (cursor != null) {
             int res = cursor.getValue().compareTo(v);
             if (res > 0) {
                 if (cursor.getLeft() == null) {
-                    cursor.setLeft(new BSNode<E>(v));
+                    cursor.setLeft(new BSearchNode<E>(v));
                     return;
                 }
-                cursor = (BSNode<E>) cursor.getLeft();
+                cursor = (BSearchNode<E>) cursor.getLeft();
             } else if (res < 0) {
                 if (cursor.getRight() == null) {
-                    cursor.setRight(new BSNode<E>(v));
+                    cursor.setRight(new BSearchNode<E>(v));
                     return;
                 }
-                cursor = (BSNode<E>) cursor.getRight();
+                cursor = (BSearchNode<E>) cursor.getRight();
             } else {
                 return;
             }
         }
     }
 
-    public BSNode<E> search(E v) {
-        BSNode<E> cursor = root;
+    @Override
+    public BSearchNode<E> search(E v) {
+        BSearchNode<E> cursor = root;
         while (cursor != null) {
             int res = cursor.getValue().compareTo(v);
             if (res == 0) {
                 return cursor;
             } else if (res > 0) {
-                cursor = (BSNode<E>) cursor.getLeft();
+                cursor = (BSearchNode<E>) cursor.getLeft();
             } else {
-                cursor = (BSNode<E>) cursor.getRight();
+                cursor = (BSearchNode<E>) cursor.getRight();
             }
         }
         return null;
@@ -65,8 +68,8 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
      */
     @Override
     public void remove(E v) {
-        BSNode<E> cursor = root;
-        BSNode<E> parent = null;
+        BSearchNode<E> cursor = root;
+        BSearchNode<E> parent = null;
         while (cursor != null) {
             int res = cursor.getValue().compareTo(v);
             if (res == 0) {
@@ -77,13 +80,13 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
                     replace = cursor.getLeft();
                 } else {
                     // find biggest one on the left sub tree
-                    Bean result = fetchAndRemoveBiggestNode((BSNode<E>) cursor.getLeft());
+                    Bean result = fetchAndRemoveBiggestNode((BSearchNode<E>) cursor.getLeft());
                     result.biggest.setLeft(result.left_tree);
                     result.biggest.setRight(cursor.getRight());
                     replace = result.biggest;
                 }
                 if (cursor == root) {//parent must be null;
-                    root = (BSNode<E>) replace;
+                    root = (BSearchNode<E>) replace;
                 } else {
                     if (parent.getLeft() == cursor) {
                         parent.setLeft(replace);
@@ -94,34 +97,34 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
                 return;
             } else if (res > 0) {
                 parent = cursor;
-                cursor = (BSNode<E>) cursor.getLeft();
+                cursor = (BSearchNode<E>) cursor.getLeft();
             } else {
                 parent = cursor;
-                cursor = (BSNode<E>) cursor.getRight();
+                cursor = (BSearchNode<E>) cursor.getRight();
             }
         }
     }
 
     public class Bean {
-        public BSNode<E> left_tree;
-        public BSNode<E> biggest;
+        public BSearchNode<E> left_tree;
+        public BSearchNode<E> biggest;
     }
 
-    private Bean fetchAndRemoveBiggestNode(BSNode<E> lnode) {
+    private Bean fetchAndRemoveBiggestNode(BSearchNode<E> lnode) {
         if (lnode == null) {
             return null;
         }
         Bean bean = new Bean();
         if (lnode.getRight() == null) {
-            bean.left_tree = (BSNode<E>) lnode.getLeft();
+            bean.left_tree = (BSearchNode<E>) lnode.getLeft();
             bean.biggest = lnode;
         } else {
             bean.left_tree = lnode;
-            BSNode<E> parent = lnode;
-            lnode = (BSNode<E>) lnode.getRight();
+            BSearchNode<E> parent = lnode;
+            lnode = (BSearchNode<E>) lnode.getRight();
             while (lnode.getRight() != null) {
                 parent = lnode;
-                lnode = (BSNode<E>) lnode.getRight();
+                lnode = (BSearchNode<E>) lnode.getRight();
             }
             parent.setRight(lnode.getLeft());
             bean.biggest = lnode;
@@ -188,7 +191,7 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
     }
 
     @Override
-    public BinaryNode<E> getRoot() {
+    public BSearchNode<E> getRoot() {
         return this.root;
     }
 
