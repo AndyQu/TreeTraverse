@@ -1,14 +1,14 @@
 package algorithm.tree.binary;
 
 import algorithm.tree.binary.interfaces.BSearchNode;
-import algorithm.tree.binary.interfaces.BinaryNode;
-import algorithm.tree.binary.interfaces.BinarySearchTree;
+import algorithm.tree.binary.interfaces.BNode;
+import algorithm.tree.binary.interfaces.BSearchTree;
 import andy.util.Log;
 
-public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySearchTree<E>{
+public class BSearchTreeNorm<E extends Comparable<E>> implements BSearchTree<E>{
     private BSearchNode<E> root = null;
 
-    public BinarySearchTreeNorm() {
+    public BSearchTreeNorm() {
     }
 
     @Override
@@ -73,7 +73,7 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
         while (cursor != null) {
             int res = cursor.getValue().compareTo(v);
             if (res == 0) {
-                BinaryNode<E> replace = null;
+                BNode<E> replace = null;
                 if (cursor.getLeft() == null) {
                     replace = cursor.getRight();
                 } else if (cursor.getRight() == null) {
@@ -140,8 +140,8 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
         testDeleteNodeWithOnlyRightTree(generateTree());
         testDeleteNodeWithBothChilds(generateTree());
     }
-    private static BinarySearchTreeNorm<Integer>generateTree(){
-        BinarySearchTreeNorm<Integer> tree = new BinarySearchTreeNorm<Integer>();
+    private static BSearchTreeNorm<Integer>generateTree(){
+        BSearchTreeNorm<Integer> tree = new BSearchTreeNorm<Integer>();
         tree.insert(50);
         tree.insert(60);
         tree.insert(70);
@@ -157,7 +157,7 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
         tree.insert(90);
         return tree;
     }
-    private static void testDeleteLeaf(BinarySearchTreeNorm<Integer>tree){
+    private static void testDeleteLeaf(BSearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteLeaf");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 43;
@@ -165,7 +165,7 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
         tree.remove(target);
         BinaryTreeTraverse.doit(tree.root);
     }
-    private static void testDeleteNodeWithOnlyLeftTree(BinarySearchTreeNorm<Integer>tree){
+    private static void testDeleteNodeWithOnlyLeftTree(BSearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteNodeWithOnlyLeftTree");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 48;
@@ -173,7 +173,7 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
         tree.remove(target);
         BinaryTreeTraverse.doit(tree.root);
     }
-    private static void testDeleteNodeWithOnlyRightTree(BinarySearchTreeNorm<Integer>tree){
+    private static void testDeleteNodeWithOnlyRightTree(BSearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteNodeWithOnlyRightTree");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 60;
@@ -181,7 +181,7 @@ public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySear
         tree.remove(target);
         BinaryTreeTraverse.doit(tree.root);
     }
-    private static void testDeleteNodeWithBothChilds(BinarySearchTreeNorm<Integer>tree){
+    private static void testDeleteNodeWithBothChilds(BSearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteNodeWithBothChilds");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 42;
