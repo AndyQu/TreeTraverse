@@ -47,4 +47,14 @@ public class AvlNode<E extends Comparable<E>> extends BSearchNode<E> implements 
                         ((AvlNode<E>)getLeft()).getHeight())>1;
     }
 
+    public boolean isLeftLonger(){
+    	if(this.getLeft()==null){
+    		return false;
+    	}else if(this.getRight()==null){
+    		return true;
+    	}else{
+    		return ((AvlNode<E>)getLeft()).getHeight()- 
+                    ((AvlNode<E>)getRight()).getHeight()>=0;
+    	}
+    }
 }

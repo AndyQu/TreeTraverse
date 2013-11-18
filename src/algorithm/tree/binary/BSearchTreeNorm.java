@@ -1,5 +1,6 @@
 package algorithm.tree.binary;
 
+import algorithm.tree.binary.FetchAndRemoveRightMostNode.Bean;
 import algorithm.tree.binary.interfaces.BSearchNode;
 import algorithm.tree.binary.interfaces.BNode;
 import algorithm.tree.binary.interfaces.BSearchTree;
@@ -80,7 +81,7 @@ public class BSearchTreeNorm<E extends Comparable<E>> implements BSearchTree<E>{
                     replace = cursor.getLeft();
                 } else {
                     // find biggest one on the left sub tree
-                    Bean result = fetchAndRemoveBiggestNode((BSearchNode<E>) cursor.getLeft());
+                    Bean result = FetchAndRemoveRightMostNode.doit((BSearchNode<E>) cursor.getLeft());
                     result.biggest.setLeft(result.left_tree);
                     result.biggest.setRight(cursor.getRight());
                     replace = result.biggest;
@@ -103,35 +104,6 @@ public class BSearchTreeNorm<E extends Comparable<E>> implements BSearchTree<E>{
                 cursor = (BSearchNode<E>) cursor.getRight();
             }
         }
-    }
-
-    public class Bean {
-        public BSearchNode<E> left_tree;
-        public BSearchNode<E> biggest;
-    }
-
-    private Bean fetchAndRemoveBiggestNode(BSearchNode<E> lnode) {
-        if (lnode == null) {
-            return null;
-        }
-        Bean bean = new Bean();
-        if (lnode.getRight() == null) {
-            bean.left_tree = (BSearchNode<E>) lnode.getLeft();
-            bean.biggest = lnode;
-        } else {
-            bean.left_tree = lnode;
-            BSearchNode<E> parent = lnode;
-            lnode = (BSearchNode<E>) lnode.getRight();
-            while (lnode.getRight() != null) {
-                parent = lnode;
-                lnode = (BSearchNode<E>) lnode.getRight();
-            }
-            parent.setRight(lnode.getLeft());
-            bean.biggest = lnode;
-        }
-        bean.biggest.setLeft(null);
-        bean.biggest.setRight(null);
-        return bean;
     }
 
     public static void main(String[] args) {
