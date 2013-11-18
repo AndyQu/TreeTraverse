@@ -1,5 +1,6 @@
 package algorithm.tree.binary;
 
+import algorithm.tree.binary.interfaces.BinaryNode;
 import andy.util.Log;
 
 public class BinaryTreeTraverse {

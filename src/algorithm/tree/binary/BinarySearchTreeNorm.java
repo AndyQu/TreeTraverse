@@ -1,11 +1,13 @@
 package algorithm.tree.binary;
 
+import algorithm.tree.binary.interfaces.BinaryNode;
+import algorithm.tree.binary.interfaces.BinarySearchTree;
 import andy.util.Log;
 
-public class BinarySearchTree<E extends Comparable<E>> {
+public class BinarySearchTreeNorm<E extends Comparable<E>> implements BinarySearchTree<E>{
     private BSNode<E> root = null;
 
-    public BinarySearchTree() {
+    public BinarySearchTreeNorm() {
     }
 
     public void insert(E v) {
@@ -61,7 +63,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
      * use the replace node to replace the deleted node, and use "parent" to link it.
      * @param v
      */
-    public void delete(E v) {
+    @Override
+    public void remove(E v) {
         BSNode<E> cursor = root;
         BSNode<E> parent = null;
         while (cursor != null) {
@@ -134,8 +137,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
         testDeleteNodeWithOnlyRightTree(generateTree());
         testDeleteNodeWithBothChilds(generateTree());
     }
-    private static BinarySearchTree<Integer>generateTree(){
-        BinarySearchTree<Integer> tree = new BinarySearchTree<Integer>();
+    private static BinarySearchTreeNorm<Integer>generateTree(){
+        BinarySearchTreeNorm<Integer> tree = new BinarySearchTreeNorm<Integer>();
         tree.insert(50);
         tree.insert(60);
         tree.insert(70);
@@ -151,36 +154,42 @@ public class BinarySearchTree<E extends Comparable<E>> {
         tree.insert(90);
         return tree;
     }
-    private static void testDeleteLeaf(BinarySearchTree<Integer>tree){
+    private static void testDeleteLeaf(BinarySearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteLeaf");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 43;
         Log.en("=======remove " + target);
-        tree.delete(target);
+        tree.remove(target);
         BinaryTreeTraverse.doit(tree.root);
     }
-    private static void testDeleteNodeWithOnlyLeftTree(BinarySearchTree<Integer>tree){
+    private static void testDeleteNodeWithOnlyLeftTree(BinarySearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteNodeWithOnlyLeftTree");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 48;
         Log.en("=======remove " + target);
-        tree.delete(target);
+        tree.remove(target);
         BinaryTreeTraverse.doit(tree.root);
     }
-    private static void testDeleteNodeWithOnlyRightTree(BinarySearchTree<Integer>tree){
+    private static void testDeleteNodeWithOnlyRightTree(BinarySearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteNodeWithOnlyRightTree");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 60;
         Log.en("=======remove " + target);
-        tree.delete(target);
+        tree.remove(target);
         BinaryTreeTraverse.doit(tree.root);
     }
-    private static void testDeleteNodeWithBothChilds(BinarySearchTree<Integer>tree){
+    private static void testDeleteNodeWithBothChilds(BinarySearchTreeNorm<Integer>tree){
         Log.en("=======testDeleteNodeWithBothChilds");
         BinaryTreeTraverse.doit(tree.root);
         Integer target = 42;
         Log.en("=======remove " + target);
-        tree.delete(target);
+        tree.remove(target);
         BinaryTreeTraverse.doit(tree.root);
     }
+
+    @Override
+    public BinaryNode<E> getRoot() {
+        return this.root;
+    }
+
 }

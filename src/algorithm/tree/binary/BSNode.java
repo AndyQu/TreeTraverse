@@ -1,5 +1,7 @@
 package algorithm.tree.binary;
 
+import algorithm.tree.binary.interfaces.BinaryNode;
+
 public class BSNode<E> implements BinaryNode<E>{
     private BinaryNode<E> left=null;
     private BinaryNode<E> right=null;

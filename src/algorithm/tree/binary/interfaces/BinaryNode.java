@@ -1,4 +1,4 @@
-package algorithm.tree.binary;
+package algorithm.tree.binary.interfaces;
 
 public interface BinaryNode<E> {
     public BinaryNode<E> getLeft();
