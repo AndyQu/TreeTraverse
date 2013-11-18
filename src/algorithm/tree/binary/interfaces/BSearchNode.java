@@ -1,12 +1,11 @@
-package algorithm.tree.binary;
+package algorithm.tree.binary.interfaces;
 
-import algorithm.tree.binary.interfaces.BinaryNode;
 
-public class BSNode<E> implements BinaryNode<E>{
+public class BSearchNode<E> implements BinaryNode<E>{
     private BinaryNode<E> left=null;
     private BinaryNode<E> right=null;
     private Comparable<E>value=null;
-    public BSNode(Comparable<E>v){
+    public BSearchNode(Comparable<E>v){
         value=v;
     }
     @Override
