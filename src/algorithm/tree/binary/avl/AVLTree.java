@@ -302,10 +302,28 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 	    testInsert_Right_Left();
 	    testInsert_Left_Left();
 	    testInsert_Left_Right();
+	    testDelete();
 	}
 	
-	private static AVLTree<Integer>generateTree(){
-	    return null;
+	private static void testDelete(){
+	    Log.en("============testDelete");
+        AVLTree<Integer>root=new AVLTree<Integer>();
+        int max=11;
+        for(int i=1;i<=max;i++){
+            root.insert(i);
+        }
+        int target=3;
+        Log.en("============Before Delete:"+target);
+        BinaryTreeTraverse.doit(root.getRoot());
+        
+        Log.en("============After  Delete:"+target);
+        root.remove(target);
+        BinaryTreeTraverse.doit(root.getRoot());
+        
+        target=1;
+        Log.en("============After  Delete:"+target);
+        root.remove(target);
+        BinaryTreeTraverse.doit(root.getRoot());
 	}
 	private static void testInsert_Right_Right(){
 	    Log.en("============testInsert_Right_Right");
