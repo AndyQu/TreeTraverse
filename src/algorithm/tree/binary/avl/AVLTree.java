@@ -303,8 +303,84 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 	    testInsert_Left_Left();
 	    testInsert_Left_Right();
 	    testDelete();
+	    testDelete_more_than_one_rotation();
 	}
 	
+	private static void testDelete_more_than_one_rotation(){
+	    Log.en("============testDelete_more_than_one_rotation");
+	    
+	    AvlNode<Integer> n19=new AvlNode<Integer>(19);
+	    n19.updateHeight();
+	    
+	    AvlNode<Integer> n18=new AvlNode<Integer>(18);
+	    n18.setRight(n19);
+	    n19.setParent(n18);
+	    n18.updateHeight();
+	    
+	    AvlNode<Integer> n16=new AvlNode<Integer>(16);
+	    n16.updateHeight();
+	    
+	    AvlNode<Integer>n17=new AvlNode<Integer>(17);
+	    n17.setRight(n18);
+	    n18.setParent(n17);
+	    n17.setLeft(n16);
+	    n16.setParent(n17);
+	    n17.updateHeight();
+	    
+	    AvlNode<Integer>n11=new AvlNode<Integer>(11);
+	    n11.updateHeight();
+	    AvlNode<Integer>n13=new AvlNode<Integer>(13);
+	    n13.updateHeight();
+	    
+	    AvlNode<Integer>n12=new AvlNode<Integer>(12);
+	    n12.setLeft(n11);
+	    n11.setParent(n12);
+	    n12.setRight(n13);
+	    n13.setParent(n12);
+	    n12.updateHeight();
+	    
+	    AvlNode<Integer>n15=new AvlNode<Integer>(15);
+	    n15.setLeft(n12);
+	    n12.setParent(n15);
+	    n15.setRight(n17);
+	    n17.setParent(n15);
+	    n15.updateHeight();
+	    
+	    AvlNode<Integer>n7=new AvlNode<Integer>(7);
+	    n7.setHeight(1);
+	    
+	    AvlNode<Integer>n6=new AvlNode<Integer>(6);
+	    n6.setRight(n7);
+	    n7.setParent(n6);
+	    n6.updateHeight();
+	    
+	    AvlNode<Integer>n3=new AvlNode<Integer>(3);
+	    n3.updateHeight();
+	    
+	    AvlNode<Integer>n5=new AvlNode<Integer>(5);
+	    n5.setLeft(n3);
+	    n3.setParent(n5);
+	    n5.setRight(n6);
+	    n6.setParent(n5);
+	    n5.updateHeight();
+	    
+	    AVLTree<Integer>tree=new AVLTree<Integer>();
+        tree.insert(10);
+        AvlNode<Integer>root=(AvlNode<Integer>) tree.getRoot();
+        root.setLeft(n5);
+        n5.setParent(root);
+        root.setRight(n15);
+        n15.setParent(root);
+        root.updateHeight();
+        
+        Log.en("============Before Delete");
+        BinaryTreeTraverse.doit(tree.getRoot());
+        
+        int target=3;
+        Log.en("============After  Delete:"+target);
+        tree.remove(target);
+        BinaryTreeTraverse.doit(tree.getRoot());
+	}
 	private static void testDelete(){
 	    Log.en("============testDelete");
         AVLTree<Integer>root=new AVLTree<Integer>();
