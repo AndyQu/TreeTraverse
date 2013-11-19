@@ -30,31 +30,29 @@ public class AvlNode<E extends Comparable<E>> extends BSearchNode<E> implements 
     }
     
     public void updateHeight(){
-        if(this.getLeft()==null){
-            this.height=((AvlNode<E>)getRight()).getHeight()+1;
-        }else if(this.getRight()==null){
-            this.height=((AvlNode<E>)getLeft()).getHeight()+1;
-        }else{
-            this.height=Math.max(
-                            ((AvlNode<E>)getRight()).getHeight(), 
-                            ((AvlNode<E>)getLeft()).getHeight()
-                                )+1;
-        }
+            this.height=Math.max(getLeftHeight(),getRightHeight())+1;
     }
     
     public boolean isBalanced(){
-        return Math.abs(((AvlNode<E>)getRight()).getHeight()- 
-                        ((AvlNode<E>)getLeft()).getHeight())>1;
+        return Math.abs(getLeftHeight()-getRightHeight())<=1;
     }
 
     public boolean isLeftLonger(){
-    	if(this.getLeft()==null){
-    		return false;
-    	}else if(this.getRight()==null){
-    		return true;
-    	}else{
-    		return ((AvlNode<E>)getLeft()).getHeight()- 
-                    ((AvlNode<E>)getRight()).getHeight()>=0;
-    	}
+    		return (getLeftHeight()-getRightHeight())>=0;
+    }
+    
+    private int getLeftHeight(){
+        if(getLeft()==null){
+            return 0;
+        }else{
+            return ((AvlNode<E>)getLeft()).getHeight();
+        }
+    }
+    private int getRightHeight(){
+        if(getRight()==null){
+            return 0;
+        }else{
+            return ((AvlNode<E>)getRight()).getHeight();
+        }
     }
 }

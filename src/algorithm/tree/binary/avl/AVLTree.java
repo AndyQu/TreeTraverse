@@ -1,9 +1,11 @@
 package algorithm.tree.binary.avl;
 
+import algorithm.tree.binary.BinaryTreeTraverse;
 import algorithm.tree.binary.FetchAndRemoveRightMostNode;
 import algorithm.tree.binary.FetchAndRemoveRightMostNode.Bean;
 import algorithm.tree.binary.interfaces.BSearchNode;
 import algorithm.tree.binary.interfaces.BSearchTree;
+import andy.util.Log;
 
 public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 	private AvlNode<E> root = null;
@@ -55,6 +57,9 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 		child.updateHeight();
 		AvlNode<E> parent = (AvlNode<E>) child.getParent();
 		boolean downIsLeft = (child.getLeft() == newAdded);
+		if(parent==null){
+		    return;
+		}
 		boolean upIsLeft = (parent.getLeft() == child);
 		while (parent != null) {
 			if (parent.isBalanced()) {
@@ -68,7 +73,7 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 					downIsLeft = upIsLeft;
 					child = parent;
 					parent = (AvlNode<E>) parent.getParent();
-					upIsLeft = (parent.getLeft() == child);
+					upIsLeft = parent!=null?(parent.getLeft() == child):false;
 				}
 			} else {
 				break;
@@ -197,8 +202,10 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 			parent.setLeft(middle);
 			parent.setParent(child);
 
-			child.updateHeight();
+			//Notice the order of updating nodes' height. must update the lower level node first.
+            //Here, "parent" is the lower node
 			parent.updateHeight();
+			child.updateHeight();
 
 			replaceForParent = child;
 		} else if (!upIsLeft && !downIsLeft) {// right,right
@@ -210,8 +217,10 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 			parent.setRight(middle);
 			parent.setParent(child);
 
-			child.updateHeight();
+			//Notice the order of updating nodes' height. must update the lower level node first.
+			//Here, "parent" is the lower node
 			parent.updateHeight();
+			child.updateHeight();
 
 			replaceForParent = child;
 		} else if (upIsLeft && !downIsLeft) {// left,right
@@ -228,9 +237,12 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 			targetRoot.setLeft(child);
 			targetRoot.setRight(parent);
 
+			//Notice the order of updating nodes' height. must update the lower level node first.
+            //Here, "child" and "parent" are the lower nodes
 			child.updateHeight();
-			targetRoot.updateHeight();
 			parent.updateHeight();
+			targetRoot.updateHeight();
+			
 
 			replaceForParent = targetRoot;
 		} else {// right,left
@@ -247,9 +259,11 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 			targetRoot.setLeft(parent);
 			targetRoot.setRight(child);
 
+			//Notice the order of updating nodes' height. must update the lower level node first.
+            //Here, "child" and "parent" are the lower nodes
 			child.updateHeight();
-			targetRoot.updateHeight();
 			parent.updateHeight();
+			targetRoot.updateHeight();
 
 			replaceForParent = targetRoot;
 		}
@@ -283,5 +297,58 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 		}
 		return cursor;
 	}
-
+	public static void main(String[]args){
+	    testInsert_Right_Right();
+	    testInsert_Right_Left();
+	    testInsert_Left_Left();
+	    testInsert_Left_Right();
+	}
+	
+	private static AVLTree<Integer>generateTree(){
+	    return null;
+	}
+	private static void testInsert_Right_Right(){
+	    Log.en("============testInsert_Right_Right");
+	    AVLTree<Integer>root=new AVLTree<Integer>();
+        root.insert(1);
+        root.insert(5);
+        root.insert(10);
+        root.insert(15);
+        root.insert(20);
+	    BinaryTreeTraverse.doit(root.getRoot());
+	}
+	private static void testInsert_Right_Left(){
+        Log.en("============testInsert_Right_Left");
+        AVLTree<Integer>root=new AVLTree<Integer>();
+        root.insert(1);
+        root.insert(5);
+        root.insert(10);
+        root.insert(15);
+        root.insert(20);
+        
+        root.insert(11);
+        BinaryTreeTraverse.doit(root.getRoot());
+    }
+	private static void testInsert_Left_Left(){
+        Log.en("============testInsert_Left_Left");
+        AVLTree<Integer>root=new AVLTree<Integer>();
+        root.insert(20);
+        root.insert(15);
+        root.insert(10);
+        root.insert(5);
+        root.insert(1);
+        BinaryTreeTraverse.doit(root.getRoot());
+    }
+	private static void testInsert_Left_Right(){
+        Log.en("============testInsert_Left_Right");
+        AVLTree<Integer>root=new AVLTree<Integer>();
+        root.insert(20);
+        root.insert(15);
+        root.insert(10);
+        root.insert(5);
+        root.insert(1);
+        
+        root.insert(11);
+        BinaryTreeTraverse.doit(root.getRoot());
+    }
 }
