@@ -312,15 +312,25 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
         for(int i=1;i<=max;i++){
             root.insert(i);
         }
-        int target=3;
-        Log.en("============Before Delete:"+target);
+        
+        Log.en("============Before Delete");
         BinaryTreeTraverse.doit(root.getRoot());
         
+        //remove leaf
+        int target=3;
         Log.en("============After  Delete:"+target);
         root.remove(target);
         BinaryTreeTraverse.doit(root.getRoot());
         
+        //remove leaf
         target=1;
+        Log.en("============After  Delete:"+target);
+        root.remove(target);
+        BinaryTreeTraverse.doit(root.getRoot());
+        
+        
+        //remove root
+        target=6;
         Log.en("============After  Delete:"+target);
         root.remove(target);
         BinaryTreeTraverse.doit(root.getRoot());
