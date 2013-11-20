@@ -12,6 +12,28 @@ public class BSearchTreeNorm<E extends Comparable<E>> implements BSearchTree<E>{
     public BSearchTreeNorm() {
     }
 
+    /**
+     * 找到树中比x小的最大节点
+     * @param x
+     * @return
+     */
+    public BSearchNode<E> findPrev(E x){
+        BSearchNode<E>prev=null;
+        BSearchNode<E>cursor=root;
+        while(cursor!=null){
+            int res=cursor.getValue().compareTo(x);
+            if(res==0){
+                return cursor;
+            }else if(res>0){
+                cursor=(BSearchNode<E>) cursor.getLeft();
+            }else{
+                prev=cursor;
+                cursor=(BSearchNode<E>) cursor.getRight();
+            }
+        }
+        return prev;
+    }
+    
     @Override
     public void insert(E v) {
         if (root == null) {
