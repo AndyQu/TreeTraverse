@@ -1,8 +1,8 @@
 package algorithm.tree.binary.avl;
 
 import algorithm.tree.binary.BinaryTreeTraverse;
-import algorithm.tree.binary.FetchAndRemoveRightMostNode;
-import algorithm.tree.binary.FetchAndRemoveRightMostNode.Bean;
+import algorithm.tree.binary.GeneralTreeOperation;
+import algorithm.tree.binary.GeneralTreeOperation.Bean;
 import algorithm.tree.binary.interfaces.BSearchNode;
 import algorithm.tree.binary.interfaces.BSearchTree;
 import andy.util.Log;
@@ -105,7 +105,7 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 
 					update_start_node = parent;
 				} else {
-					Bean res = FetchAndRemoveRightMostNode.doit(cursor
+					Bean res = GeneralTreeOperation.fetchAndRemoveLargestNode(cursor
 							.getLeft());
 					replace = (AvlNode<E>) res.biggest;
 					replace.setLeft(res.left_tree);
@@ -297,6 +297,23 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 		}
 		return cursor;
 	}
+	
+	/**
+	 * merge another AVL tree into this AVL tree.
+	 * This may generate a sub tree, whose left sub tree and right sub tree differs more than 1 in height.
+	 * Suppose we always call this method to merge a shorter tree.
+	 * @param tree
+	 */
+	public void merge(AVLTree<E> treeB){
+	    //find the largest element of treeA: maxE
+	    AvlNode<E>maxE=(AvlNode<E>)GeneralTreeOperation.fetchLargestNode(this.root);
+	    //remove maxE from treeA
+	    this.remove(maxE.getValue());
+	    //make maxE the parent of treeA and treeB
+	    //balance the generated new tree
+	}
+	
+
 	public static void main(String[]args){
 	    testInsert_Right_Right();
 	    testInsert_Right_Left();

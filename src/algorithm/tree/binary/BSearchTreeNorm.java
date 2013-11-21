@@ -1,6 +1,6 @@
 package algorithm.tree.binary;
 
-import algorithm.tree.binary.FetchAndRemoveRightMostNode.Bean;
+import algorithm.tree.binary.GeneralTreeOperation.Bean;
 import algorithm.tree.binary.interfaces.BSearchNode;
 import algorithm.tree.binary.interfaces.BNode;
 import algorithm.tree.binary.interfaces.BSearchTree;
@@ -103,7 +103,7 @@ public class BSearchTreeNorm<E extends Comparable<E>> implements BSearchTree<E>{
                     replace = cursor.getLeft();
                 } else {
                     // find biggest one on the left sub tree
-                    Bean result = FetchAndRemoveRightMostNode.doit((BSearchNode<E>) cursor.getLeft());
+                    Bean result = GeneralTreeOperation.fetchAndRemoveLargestNode((BSearchNode<E>) cursor.getLeft());
                     result.biggest.setLeft(result.left_tree);
                     result.biggest.setRight(cursor.getRight());
                     replace = result.biggest;

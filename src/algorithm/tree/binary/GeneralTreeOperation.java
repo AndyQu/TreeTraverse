@@ -2,13 +2,29 @@ package algorithm.tree.binary;
 
 import algorithm.tree.binary.interfaces.BNode;
 
-public class FetchAndRemoveRightMostNode {
+public class GeneralTreeOperation {
 	public static class Bean {
         public BNode left_tree;
         public BNode biggest;
         public BNode biggest_origin_father;
     }
-	public static Bean doit(BNode lnode) {
+	
+	public static BNode fetchLargestNode(BNode lnode){
+	    if (lnode == null) {
+            return null;
+        }
+        Bean bean = new Bean();
+        if (lnode.getRight() == null) {
+            return lnode;
+        } else {
+            while (lnode.getRight() != null) {
+                lnode = lnode.getRight();
+            }
+            return lnode;
+        }
+	}
+	
+	public static Bean fetchAndRemoveLargestNode(BNode lnode) {
         if (lnode == null) {
             return null;
         }

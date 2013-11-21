@@ -1,11 +1,11 @@
 package algorithm.tree.binary.interfaces;
 
 
-public class BSearchNode<E> implements BNode<E>{
+public class BSearchNode<E extends Comparable<E>> implements BNode<E>{
     private BNode<E> left=null;
     private BNode<E> right=null;
-    private Comparable<E>value=null;
-    public BSearchNode(Comparable<E>v){
+    private E value=null;
+    public BSearchNode(E v){
         value=v;
     }
     @Override
@@ -24,10 +24,10 @@ public class BSearchNode<E> implements BNode<E>{
     public void setRight(BNode<E> right) {
         this.right = right;
     }
-    public Comparable<E> getValue() {
+    public E getValue() {
         return value;
     }
-    public void setValue(Comparable<E> value) {
+    public void setValue(E value) {
         this.value = value;
     }
     public String toString(){
