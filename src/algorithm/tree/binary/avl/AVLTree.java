@@ -336,7 +336,10 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 	    maxE.setParent(null);
 	    maxE.setLeft(root);
 	    maxE.setRight(treeB.getRoot());
+	    root.setParent(maxE);
+	    treeB.root.setParent(maxE);
 	    maxE.updateHeight();
+	    root=maxE;
 	    //balance the generated new tree
 	    rotateIfNotBalance(maxE);
 	}
@@ -376,6 +379,172 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 	    testInsert_Left_Right();
 	    testDelete();
 	    testDelete_more_than_one_rotation();
+	    testMerge();
+	}
+	
+	/**
+	 * The pictures of this test case can be found at Document/gv/avl-merge
+	 */
+	private static void testMerge(){
+	    Log.en("============testMerge");
+	    
+	    //sub 1
+	    AvlNode<Integer> n1=new AvlNode<Integer>(1);
+	    AvlNode<Integer> n5=new AvlNode<Integer>(5);
+	    AvlNode<Integer> n3=new AvlNode<Integer>(3);
+	    n3.setLeft(n1);
+	    n3.setRight(n5);
+	    n1.setParent(n3);
+	    n5.setParent(n3);
+	    n1.updateHeight();
+	    n5.updateHeight();
+	    n3.updateHeight();
+	    
+	    AvlNode<Integer> n10=new AvlNode<Integer>(10);
+	    AvlNode<Integer> n15=new AvlNode<Integer>(15);
+	    AvlNode<Integer> n12=new AvlNode<Integer>(12);
+	    n12.setLeft(n10);
+        n12.setRight(n15);
+        n10.setParent(n12);
+        n15.setParent(n12);
+        n10.updateHeight();
+        n15.updateHeight();
+        n12.updateHeight();
+        
+        AvlNode<Integer> n7=new AvlNode<Integer>(7);
+        n7.setLeft(n3);
+        n7.setRight(n12);
+        n3.setParent(n7);
+        n12.setParent(n7);
+        n7.updateHeight();
+        
+        //sub2
+        AvlNode<Integer> n20=new AvlNode<Integer>(20);
+        AvlNode<Integer> n25=new AvlNode<Integer>(25);
+        AvlNode<Integer> n22=new AvlNode<Integer>(22);
+        n22.setLeft(n20);
+        n22.setRight(n25);
+        n20.setParent(n22);
+        n25.setParent(n22);
+        
+        n20.updateHeight();
+        n25.updateHeight();
+        n22.updateHeight();
+        
+        AvlNode<Integer> n30=new AvlNode<Integer>(30);
+        AvlNode<Integer> n35=new AvlNode<Integer>(35);
+        AvlNode<Integer> n32=new AvlNode<Integer>(32);
+        n32.setLeft(n30);
+        n32.setRight(n35);
+        n30.setParent(n32);
+        n35.setParent(n32);
+        
+        n30.updateHeight();
+        n35.updateHeight();
+        n32.updateHeight();
+        
+        AvlNode<Integer> n27=new AvlNode<Integer>(27);
+        n27.setLeft(n22);
+        n27.setRight(n32);
+        n22.setParent(n27);
+        n32.setParent(n27);
+        
+        n27.updateHeight();
+        
+        //sub3
+        AvlNode<Integer> n40=new AvlNode<Integer>(40);
+        AvlNode<Integer> n45=new AvlNode<Integer>(45);
+        AvlNode<Integer> n42=new AvlNode<Integer>(42);
+        n42.setLeft(n40);
+        n42.setRight(n45);
+        n40.setParent(n42);
+        n45.setParent(n42);
+        n40.updateHeight();
+        n45.updateHeight();
+        n42.updateHeight();
+        
+        AvlNode<Integer> n50=new AvlNode<Integer>(50);
+        AvlNode<Integer> n55=new AvlNode<Integer>(55);
+        AvlNode<Integer> n52=new AvlNode<Integer>(52);
+        n52.setLeft(n50);
+        n52.setRight(n55);
+        n50.setParent(n52);
+        n55.setParent(n52);
+        n50.updateHeight();
+        n55.updateHeight();
+        n52.updateHeight();
+        
+        AvlNode<Integer> n47=new AvlNode<Integer>(47);
+        n47.setLeft(n42);
+        n47.setRight(n52);
+        n42.setParent(n47);
+        n52.setParent(n47);
+        n47.updateHeight();
+        
+        //sub4
+        AvlNode<Integer> n60=new AvlNode<Integer>(60);
+        AvlNode<Integer> n65=new AvlNode<Integer>(65);
+        AvlNode<Integer> n62=new AvlNode<Integer>(62);
+        n62.setLeft(n60);
+        n62.setRight(n65);
+        n60.setParent(n62);
+        n65.setParent(n62);
+        n60.updateHeight();
+        n65.updateHeight();
+        n62.updateHeight();
+        
+        AvlNode<Integer> n70=new AvlNode<Integer>(70);
+        AvlNode<Integer>n75=new AvlNode<Integer>(75);
+        AvlNode<Integer> n72=new AvlNode<Integer>(72);
+        n72.setLeft(n70);
+        n70.setParent(n72);
+        n72.setRight(n75);
+        n75.setParent(n72);
+        n70.updateHeight();
+        n75.updateHeight();
+        n72.updateHeight();
+        
+        AvlNode<Integer> n67=new AvlNode<Integer>(67);
+        n67.setLeft(n62);
+        n67.setRight(n72);
+        n62.setParent(n67);
+        n72.setParent(n67);
+        n67.updateHeight();
+        
+        //upper
+        AvlNode<Integer>n17=new AvlNode<Integer>(17);
+        n17.setLeft(n7 );
+        n17.setRight(n27);
+        n7.setParent(n17);
+        n27.setParent(n17);
+        n17.updateHeight();
+        
+        AvlNode<Integer>n57=new AvlNode<Integer>(57);
+        n57.setLeft(n47);
+        n57.setRight(n67);
+        n47.setParent(n57);
+        n67.setParent(n57);
+        n57.updateHeight();
+        
+        AvlNode<Integer>n37=new AvlNode<Integer>(37);
+        n37.setLeft(n17);
+        n37.setRight(n57);
+        n17.setParent(n37);
+        n57.setParent(n37);
+        n37.updateHeight();
+        
+        AVLTree<Integer>treeA=new AVLTree<Integer>();
+        treeA.root=n37;
+        
+        AVLTree<Integer>treeB=new AVLTree<Integer>();
+        treeB.insert(100);
+        
+        Log.en("============before merge");
+        BinaryTreeTraverse.doit(treeA.getRoot());
+        
+        Log.en("============after merge");
+        treeA.merge(treeB);
+        BinaryTreeTraverse.doit(treeA.getRoot());
 	}
 	
 	private static void testDelete_more_than_one_rotation(){
