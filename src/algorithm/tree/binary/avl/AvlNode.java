@@ -41,6 +41,10 @@ public class AvlNode<E extends Comparable<E>> extends BSearchNode<E> implements 
     		return (getLeftHeight()-getRightHeight())>=0;
     }
     
+    public int lengthCompare(){
+        return getLeftHeight()-getRightHeight();
+    }
+    
     private int getLeftHeight(){
         if(getLeft()==null){
             return 0;

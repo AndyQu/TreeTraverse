@@ -204,10 +204,14 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 
 			//Notice the order of updating nodes' height. must update the lower level node first.
             //Here, "parent" is the lower node
+			//"parent" may need to be balanced 
 			parent.updateHeight();
+			parent=rotateIfNotBalance(parent);
+			child.setRight(parent);
+			parent.setParent(child);
+			
 			child.updateHeight();
-
-			replaceForParent = child;
+			replaceForParent = rotateIfNotBalance(child);
 		} else if (!upIsLeft && !downIsLeft) {// right,right
 			AvlNode<E> middle = (AvlNode<E>) child.getLeft();
 
@@ -219,10 +223,14 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 
 			//Notice the order of updating nodes' height. must update the lower level node first.
 			//Here, "parent" is the lower node
+			//"parent" may need to be balanced 
 			parent.updateHeight();
+			parent=rotateIfNotBalance(parent);
+			child.setLeft(parent);
+			parent.setParent(child);
+			
 			child.updateHeight();
-
-			replaceForParent = child;
+			replaceForParent = rotateIfNotBalance(child);
 		} else if (upIsLeft && !downIsLeft) {// left,right
 			AvlNode<E> targetRoot = (AvlNode<E>) child.getRight();
 			AvlNode<E> middle_left = (AvlNode<E>) targetRoot.getLeft();
@@ -239,12 +247,19 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 
 			//Notice the order of updating nodes' height. must update the lower level node first.
             //Here, "child" and "parent" are the lower nodes
+			//"child" may need to be balanced 
 			child.updateHeight();
+			child=rotateIfNotBalance(child);
+			targetRoot.setLeft(child);
+			child.setParent(targetRoot);
+			//"parent" may need to be balanced 
 			parent.updateHeight();
+			parent=rotateIfNotBalance(parent);
+			targetRoot.setRight(parent);
+			parent.setParent(targetRoot);
+			//"targetRoot" may need to be re balanced 
 			targetRoot.updateHeight();
-			
-
-			replaceForParent = targetRoot;
+			replaceForParent = rotateIfNotBalance(targetRoot);
 		} else {// right,left
 			AvlNode<E> targetRoot = (AvlNode<E>) child.getLeft();
 			AvlNode<E> middle_left = (AvlNode<E>) targetRoot.getLeft();
@@ -261,11 +276,19 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 
 			//Notice the order of updating nodes' height. must update the lower level node first.
             //Here, "child" and "parent" are the lower nodes
+			//"child" may need to be balanced 
 			child.updateHeight();
+			child=rotateIfNotBalance(child);
+			child.setParent(targetRoot);
+			targetRoot.setRight(child);
+			//"parent" may need to be balanced 
 			parent.updateHeight();
+			parent=rotateIfNotBalance(parent);
+			parent.setParent(targetRoot);
+			targetRoot.setLeft(parent);
+			//"targetRoot" may need to be balanced 
 			targetRoot.updateHeight();
-
-			replaceForParent = targetRoot;
+			replaceForParent = rotateIfNotBalance(targetRoot);
 		}
 
 		// link the rotated tree with father
@@ -299,9 +322,9 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 	}
 	
 	/**
-	 * merge another AVL tree into this AVL tree.
+	 * merge another AVL tree into this AVL tree, under condition all the elements in treeA 
+	 * is smaller than all the elements in treeB.
 	 * This may generate a sub tree, whose left sub tree and right sub tree differs more than 1 in height.
-	 * Suppose we always call this method to merge a shorter tree.
 	 * @param tree
 	 */
 	public void merge(AVLTree<E> treeB){
@@ -310,7 +333,39 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
 	    //remove maxE from treeA
 	    this.remove(maxE.getValue());
 	    //make maxE the parent of treeA and treeB
+	    maxE.setParent(null);
+	    maxE.setLeft(root);
+	    maxE.setRight(treeB.getRoot());
+	    maxE.updateHeight();
 	    //balance the generated new tree
+	    rotateIfNotBalance(maxE);
+	}
+	
+	private AvlNode<E> rotateIfNotBalance(AvlNode<E>target){
+	    if(target==null||target.isBalanced()){return target;}
+	    Boolean upIsLeft=null;
+	    AvlNode<E> child=null;
+	    if(target.isLeftLonger()){
+	        upIsLeft=true;
+	        child=(AvlNode<E>) target.getLeft();
+	    }else{
+	        upIsLeft=false;
+	        child=(AvlNode<E>) target.getRight();
+	    }
+	    if(child==null){
+	        Log.en("should not enter this.");
+	        return target;
+	    }
+	    Boolean downIsLeft=null;
+	    int res=child.lengthCompare();
+	    if(res>0){
+            downIsLeft=true;
+	    }else if(res==0){
+	        downIsLeft=upIsLeft;//try to use left/left or right/right mode
+	    }else{
+	        downIsLeft=false;
+	    }
+	    return rotate(target,upIsLeft,downIsLeft);
 	}
 	
 
@@ -405,6 +460,7 @@ public class AVLTree<E extends Comparable<E>> implements BSearchTree<E> {
         for(int i=1;i<=max;i++){
             root.insert(i);
         }
+        //the generated tree picture can be found at Document/gv/avl/avl-insert/insert_12.gv
         
         Log.en("============Before Delete");
         BinaryTreeTraverse.doit(root.getRoot());
