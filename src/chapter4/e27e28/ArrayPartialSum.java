@@ -1,12 +1,12 @@
-package chapter4.twenty_seven;
+package chapter4.e27e28;
 
 import andy.util.Log;
 
-public class PartialSum {
+public class ArrayPartialSum {
     private int[]   data;
     private int[]   psum;
     private boolean[] flag;
-    public PartialSum(int[] data){
+    public ArrayPartialSum(int[] data){
         if(data==null){
             throw new RuntimeException();
         }
@@ -79,7 +79,7 @@ public class PartialSum {
     }
     public static void main(String[]args){
         int[]data=new int[]{1,2,3,4,5,6,7,8,9,10};
-        PartialSum ps=new PartialSum(data);
+        ArrayPartialSum ps=new ArrayPartialSum(data);
         ps.printSum();
         for(int i=0;i<data.length;i++){
             ps.add(i, 10);

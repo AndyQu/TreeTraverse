@@ -5,4 +5,6 @@ public interface BNode<E> {
     public BNode<E> getRight();
     public void setRight(BNode<E> n);
     public void setLeft(BNode<E> n);
+    public E getValue();
+    public void setValue(E v);
 }
