@@ -3,7 +3,10 @@ package chapter4.e27e28;
 import java.util.HashMap;
 import java.util.Map;
 
+import algorithm.tree.binary.GeneralTreeOperation;
+import algorithm.tree.binary.GeneralTreeOperation.Bean;
 import algorithm.tree.binary.interfaces.BNode;
+import algorithm.tree.binary.interfaces.BSearchNode;
 import algorithm.tree.binary.interfaces.BidirectNode;
 import andy.util.Log;
 
@@ -15,7 +18,7 @@ public class TreePartialSum {
     public void insert(String name,int v){
         if(name==null){return;}
         if(map.containsKey(name)){
-            Log.en("[insert]duplicate name:"+name);
+            Log.en("[insert]duplicate name:"+name+". don't insert");
             return;
         }
         Node newn=new Node();
@@ -28,7 +31,7 @@ public class TreePartialSum {
         }
         Node cur=root;
         while(true){
-            if(cur.getValue()>=v){
+            if(cur.getValue()>v){
                 //update left sum, when going left
                 cur.setLeftSum(cur.getLeftSum()+v);
                 if(cur.getLeft()==null){
@@ -38,7 +41,7 @@ public class TreePartialSum {
                 }else{
                     cur=(Node) cur.getLeft();
                 }
-            }else{
+            }else if(cur.getValue()<v||cur.getValue()==v){
                 if(cur.getRight()==null){
                     cur.setRight(newn);
                     newn.setParent(cur);
@@ -50,23 +53,90 @@ public class TreePartialSum {
         }
     }
     public void delete(String name){
-        //TODO
+    	Node deletedN=map.get(name);
+        if(deletedN==null){
+            Log.en("[delete]does not contain name:"+name+". don't delete");
+            return;
+        }
+        map.remove(name);
+        //update all parents' left sum
+        add(name,0-deletedN.getValue());
+        Node replaceNode;
+        if(deletedN.getLeft()==null){
+        	replaceNode=(Node) deletedN.getRight();
+        }else if(deletedN.getRight()==null){
+        	replaceNode=(Node) deletedN.getLeft();
+        }else{
+        	// find biggest one on the left sub tree
+            Bean result = GeneralTreeOperation.fetchAndRemoveLargestNode((BSearchNode<Integer>) deletedN.getLeft());
+            result.biggest.setLeft(result.left_tree);
+            result.biggest.setRight(deletedN.getRight());
+            replaceNode=(Node) result.biggest;
+            replaceNode.setLeftSum(deletedN.getLeftSum()-replaceNode.getValue());
+        }
+        if(deletedN==root){
+        	root=replaceNode;
+        	replaceNode.setParent(null);
+        }else{
+        	Node parent=(Node) deletedN.getParent();
+        	if(parent.getLeft()==deletedN){
+        		parent.setLeft(replaceNode);
+        	}else{
+        		parent.setRight(replaceNode);
+        	}
+        	replaceNode.setParent(parent);
+        }
     }
     public void add(String name, int value){
         Node n=map.get(name);
         if(n==null){
-            Log.en("[add]does not contain name:"+name);
+            Log.en("[add]does not contain name:"+name+". don't add");
             return;
         }
         n.setValue(n.getValue()+value);
-        Node cur=n;
-        while(true){
-            cur=cur.p
+        boolean orderViolated=false;
+        if(n.getParent()!=null){
+        	Node p=(Node) n.getParent();
+        	if(p.getLeft()==n){
+        		orderViolated=p.getValue()<n.getValue();
+        	}else{
+        		orderViolated=p.getValue()>n.getValue();
+        	}
+        }
+        if(!orderViolated){
+        	if(n.getLeft()!=null){
+        		orderViolated=n.getLeft().getValue()>n.getValue();
+        	}
+        }
+        if(!orderViolated){
+        	if(n.getRight()!=null){
+        		orderViolated=n.getRight().getValue()<n.getValue();
+        	}
+        }
+        if(orderViolated){
+        	delete(name);
+        	insert(name,n.getValue());
+        }else{
+        	updateUpwards(n,value);
         }
     }
+    private void updateUpwards(Node n, int value){
+    	//TODO
+    }
     public int sum(int upperbound){
-        //TODO
-        return 0;
+        int sum=0;
+        Node cur=root;
+        while(cur!=null){
+        	if(cur.getValue()<upperbound){
+        		sum=sum+cur.getLeftSum()+cur.getValue();
+        		cur=(Node) cur.getRight();
+        	}else if(cur.getValue()==upperbound){
+        		cur=(Node) cur.getRight();
+        	}else{
+        		cur=(Node) cur.getLeft();
+        	}
+        }
+        return sum;
     }
     
     public class Node implements BidirectNode<Integer>{
