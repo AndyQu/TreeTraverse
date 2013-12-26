@@ -9,6 +9,13 @@ public class SkyLine {
     private int start;
     private List<Segment> segments;
 
+    public static SkyLine merge(SkyLine...skys){
+        SkyLine res=null;
+        for(SkyLine s:skys){
+            res=merge(s,res);
+        }
+        return res;
+    }
     /**
      * merge sky1 and sky2
      * @param sky1
@@ -16,6 +23,12 @@ public class SkyLine {
      * @return
      */
     public static SkyLine merge(SkyLine sky1, SkyLine sky2) {
+        if(sky1==null){
+            return sky2;
+        }
+        if(sky2==null){
+            return sky1;
+        }
         SkyLine merged = mergeIfNotOverlap(sky1, sky2);
         if (merged != null) {
             return merged;
@@ -41,20 +54,23 @@ public class SkyLine {
         segments.add(seg);
     }
 
-    public SkyLine(int start, Segment[] segs) {
-        if (segs == null || segs.length <= 0) {
-            Log.en("[SkyLine]segments empty. stop.");
-            return;
-        }
-        this.start = start;
-        segments = new ArrayList<Segment>();
-        for (Segment s : segs) {
-            segments.add(s);
-        }
+    public SkyLine(int start, int height,int end){
+        this.start=start;
+        segments=new ArrayList<SkyLine.Segment>();
+        segments.add(new Segment(height,end));
     }
+    
     public SkyLine(int start, List<Segment>segs){
         this.start=start;
         segments=segs;
+    }
+    
+    public void show(){
+        Log.enn("["+this.start);
+        for(Segment s:segments){
+            Log.enn("("+s.height+","+s.end+")");
+        }
+        Log.en("]");
     }
 
     private int getEndPoint() {
@@ -272,6 +288,9 @@ public class SkyLine {
                     segB=null;
                 }
             }
+        }
+        if(lastSeg!=null){
+            segments.add(lastSeg);
         }
         return new SkyLine(start, segments);
     }
