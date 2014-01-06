@@ -22,7 +22,7 @@ public class Algebra {
 			return null;
 		}
 		double d1=a1.y-c1*a1.x;
-		double d2=a2.y-c2*a2.x;
+		double d2=b1.y-c2*b1.x;
 		Point res=new Point();
 		res.y=(d2-d1)/(c1-c2);
 		res.x=c1*res.y+d1;

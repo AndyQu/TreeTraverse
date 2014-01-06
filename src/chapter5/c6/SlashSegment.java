@@ -111,9 +111,9 @@ public class SlashSegment implements ISegment{
             SlashSegment ssB=(SlashSegment) sB;
             if(isEqual(ssA.getAngle(),ssB.getAngle())){
                 if(sA.getStart()==sB.getEnd()){
-                    return new SlashSegment(ssA.getStart(), ssA.sh, ssB.getEnd(), ssB.eh);
-                }else if(sA.getEnd()==sB.getStart()){
                     return new SlashSegment(ssB.getStart(), ssB.sh, ssA.getEnd(), ssA.eh);
+                }else if(sA.getEnd()==sB.getStart()){
+                    return new SlashSegment(ssA.getStart(), ssA.sh, ssB.getEnd(), ssB.eh);
                 }else{
                     Log.en("[concatenate]2 segments don't connect.");
                     return null;

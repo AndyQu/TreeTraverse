@@ -54,12 +54,6 @@ public class SkyLine {
         segments.add(seg);
     }
 
-    public SkyLine(double start, double height,double end){
-        this.start=start;
-        segments=new ArrayList<ISegment>();
-        segments.add(new FlatSegment(height,start, end));
-    }
-    
     public SkyLine(double start, List<ISegment>segs){
         this.start=start;
         segments=segs;
@@ -317,5 +311,17 @@ public class SkyLine {
         }else{
             return null;
         }
+    }
+    
+    public SkyLine(double start, double height,double end){
+        this.start=start;
+        segments=new ArrayList<ISegment>();
+        segments.add(new FlatSegment(height,start, end));
+    }
+    
+    public SkyLine(double start, double sh, double end, double eh){
+    	this.start=start;
+    	segments=new ArrayList<ISegment>();
+    	segments.add(new SlashSegment(start, sh, end, eh));
     }
 }
