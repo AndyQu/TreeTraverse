@@ -14,16 +14,16 @@ public class Test {
         SkyLine skyJ=new SkyLine(29,13,50);
         SkyLine skyH=new SkyLine(29,20,50);
         
+        SkyLine.merge(skyA,skyB,skyC,skyD,skyE,skyF,skyG).show();
+        
+        //covered
+        SkyLine.merge(skyE,skyF).show();
+        
         //not overlaped
         SkyLine.merge(skyD,skyA).show();
         
         //connected
         SkyLine.merge(skyG,skyJ).show();
         SkyLine.merge(skyG,skyH).show();
-        
-        //covered
-        SkyLine.merge(skyE,skyF).show();
-        
-        SkyLine.merge(skyA,skyB,skyC,skyD,skyE,skyF,skyG).show();
     }
 }

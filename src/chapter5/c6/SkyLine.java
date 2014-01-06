@@ -7,7 +7,7 @@ import andy.util.Log;
 
 public class SkyLine {
     private int start;
-    private List<Segment> segments;
+    private List<ISegment> segments;
 
     public static SkyLine merge(SkyLine...skys){
         SkyLine res=null;
@@ -47,86 +47,72 @@ public class SkyLine {
         this.start = start;
     }
 
-    private void add(Segment seg) {
+    private void add(ISegment seg) {
         if (segments == null) {
-            segments = new ArrayList<SkyLine.Segment>();
+            segments = new ArrayList<ISegment>();
         }
         segments.add(seg);
     }
 
     public SkyLine(int start, int height,int end){
         this.start=start;
-        segments=new ArrayList<SkyLine.Segment>();
-        segments.add(new Segment(height,end));
+        segments=new ArrayList<ISegment>();
+        segments.add(new Segment(height,start, end));
     }
     
-    public SkyLine(int start, List<Segment>segs){
+    public SkyLine(int start, List<ISegment>segs){
         this.start=start;
         segments=segs;
     }
     
     public void show(){
         Log.enn("["+this.start);
-        for(Segment s:segments){
-            Log.enn("("+s.height+","+s.end+")");
+        for(ISegment s:segments){
+            Log.enn(s.toString());
         }
         Log.en("]");
     }
 
     private int getEndPoint() {
-        return segments.get(segments.size() - 1).end;
+        return segments.get(segments.size() - 1).getEnd();
     }
 
-    private Segment getLastSegment() {
-        return segments.get(segments.size() - 1);
-    }
-
-    private Segment getFirstSegment() {
-        return segments.get(0);
-    }
-
-    private SkyLine getSubSkyLine(int start, int end) {
-        int e = getEndPoint();
-        if (start < end && this.start <= start && end <= e) {
-            int lstart = this.start;
-            int sIndex = -1;
-            int eIndex = -1;
-            for (int i = 0; i < segments.size(); i++) {
-                Segment seg = segments.get(i);
-                if (lstart <= start && start < seg.end) {
-                    sIndex = i;
-                }
-                if (lstart < end && end <= seg.end) {
-                    eIndex = i;
-                    break;
-                }
-                lstart = seg.end;
-            }
-            if (sIndex < 0 || eIndex < 0) {
-                Log.en("[getSubSkyLine]can't find sIndex or eIndex. This SkyLine's segments may be not continous.");
-                return null;
-            }
-            SkyLine nsky = new SkyLine(start);
-            for (int i = sIndex; i < eIndex; i++) {
-                nsky.add(segments.get(i));
-            }
-            Segment endSeg = segments.get(eIndex);
-            nsky.add(new Segment(endSeg.height, end));
-            return nsky;
-        } else {
-            Log.en("[getSubSkyLine]invalid given positions:" + start + "," + end);
+    private SkyLine getSubSkyLine(int s, int e) {
+        if (!(s < e && this.start <= s && e <= getEndPoint())) {
+            Log.en("[getSubSkyLine]invalid given positions:" + s + "," + e);
             return null;
         }
-    }
-
-    public static class Segment {
-        public int height;
-        public int end;
-
-        public Segment(int h, int e) {
-            height = h;
-            end = e;
+        int sIndex = -1;
+        int eIndex = -1;
+        for (int i = 0; i < segments.size(); i++) {
+            ISegment seg = segments.get(i);
+            if (seg.getStart() <= s && s < seg.getEnd()) {
+                sIndex = i;
+            }
+            if (seg.getStart() < e && e <= seg.getEnd()) {
+                eIndex = i;
+                break;
+            }
         }
+        if (sIndex < 0 || eIndex < 0) {
+            Log.en("[getSubSkyLine]can't find sIndex or eIndex. This SkyLine's segments may be not continous.");
+            return null;
+        }
+        SkyLine nsky = new SkyLine(s);
+        ISegment startSeg=segments.get(sIndex);
+        if(sIndex==eIndex){
+            nsky.add(startSeg.subSeg(s, e));
+        }else{
+            nsky.add(startSeg.subSeg(s, startSeg.getEnd()));
+            for (int i = sIndex+1; i < eIndex; i++) {
+                nsky.add(segments.get(i));
+            }
+            if(sIndex<eIndex){
+                ISegment endSeg = segments.get(eIndex);
+                nsky.add(endSeg.subSeg(endSeg.getStart(), e));
+            }
+        }
+        return nsky;
     }
 
     public static class Line {
@@ -162,16 +148,16 @@ public class SkyLine {
             merged = concatenate(skyA, skyB);
         } else {
             merged = new SkyLine();
-            merged.segments = new ArrayList<SkyLine.Segment>();
+            merged.segments = new ArrayList<ISegment>();
             if (e1 < s2) {
                 merged.start = s1;
                 merged.segments.addAll(skyA.segments);
-                merged.segments.add(new Segment(0, s2));
+                merged.segments.add(SegTool.tool.createFlat(e1, s2, 0));
                 merged.segments.addAll(skyB.segments);
             } else if (e2 < s1) {
                 merged.start = s2;
                 merged.segments.addAll(skyB.segments);
-                merged.segments.add(new Segment(0, s1));
+                merged.segments.add(SegTool.tool.createFlat(e2, s1, 0));
                 merged.segments.addAll(skyA.segments);
             }
         }
@@ -250,47 +236,35 @@ public class SkyLine {
             return null;
         }
         int start=sky1.start;
-        List<Segment>segments=new ArrayList<SkyLine.Segment>();
-        Segment lastSeg=null;
-        Segment segA=sky1.segments.get(0);
+        List<ISegment>segments=new ArrayList<ISegment>();
+        ISegment segA=sky1.segments.get(0);
         int indexA=1;
-        Segment segB=sky2.segments.get(0);
+        ISegment segB=sky2.segments.get(0);
         int indexB=1;
         
-        int height;
-        int end;
         while(segA!=null && segB!=null){
-            height=Math.max(segA.height, segB.height);
-            end=Math.min(segA.end, segB.end);
-            if(lastSeg==null){
-                lastSeg=new Segment(height, end);
-            }else{
-                if(lastSeg.height==height){
-                    lastSeg.end=end;
-                }else{
-                    segments.add(lastSeg);
-                    lastSeg=new Segment(height,end);
-                }
-            }
-            if(end==segA.end){
+            ISegment.Bean result=SegTool.tool.merge(segA, segB);
+            segments.add(result.result);
+            if(result.segALeft==null){
                 if(indexA<sky1.segments.size()){
                     segA=sky1.segments.get(indexA);
                     indexA++;
                 }else{
                     segA=null;
                 }
+            }else{
+                segA=result.segALeft;
             }
-            if(end==segB.end){
+            if(result.segBLeft==null){
                 if(indexB<sky2.segments.size()){
                     segB=sky2.segments.get(indexB);
                     indexB++;
                 }else{
                     segB=null;
                 }
+            }else{
+                segB=result.segBLeft;
             }
-        }
-        if(lastSeg!=null){
-            segments.add(lastSeg);
         }
         return new SkyLine(start, segments);
     }
@@ -310,18 +284,38 @@ public class SkyLine {
             SkyLine linked = null;
             if (sky1.getEndPoint() == sky2.start) {
                 linked = new SkyLine(sky1.start);
-                linked.segments = new ArrayList<SkyLine.Segment>();
-                if (sky1.getLastSegment().height == sky2.getFirstSegment().height) {
-                    linked.segments.addAll(sky1.segments.subList(0, sky1.segments.size() - 1));
-                } else {
+                linked.segments = new ArrayList<ISegment>();
+                ISegment connect=SegTool.tool.concatenate(sky1.getLast(), sky2.getFirst());
+                if(connect!=null){
+                    linked.segments.addAll(sky1.segments.subList(0, sky1.segments.size()-1));
+                    linked.segments.add(connect);
+                    linked.segments.addAll(sky2.segments.subList(1, sky2.segments.size()));
+                }else{
                     linked.segments.addAll(sky1.segments);
+                    linked.segments.addAll(sky2.segments);
                 }
-                linked.segments.addAll(sky2.segments);
             } else if (sky2.getEndPoint() == sky1.start) {
                 linked = concatenate(sky2, sky1);
+            }else{
+                Log.en("can't concatenate 2 skylines.");
             }
             return linked;
         }
 
+    }
+    
+    private ISegment getLast(){
+        if(segments!=null && segments.size()>0){
+            return segments.get(segments.size()-1);
+        }else{
+            return null;
+        }
+    }
+    private ISegment getFirst(){
+        if(segments!=null && segments.size()>0){
+            return segments.get(0);
+        }else{
+            return null;
+        }
     }
 }
