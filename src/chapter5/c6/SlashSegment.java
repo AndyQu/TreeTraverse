@@ -1,6 +1,10 @@
 package chapter5.c6;
 
+import andy.util.Algebra;
+import andy.util.Algebra.Point;
 import andy.util.Log;
+
+import java.util.*;
 
 public class SlashSegment implements ISegment{
     public static Tool mergor=new Tool();
@@ -20,8 +24,8 @@ public class SlashSegment implements ISegment{
     @Override
     public ISegment subSeg(double s, double e) {
         double angle=getAngle();
-        double nsh=get(angle,(s-start),sh);
-        double neh=get(angle,(e-start),sh);
+        double nsh=Algebra.getPointY(angle,(s-start),sh);
+        double neh=Algebra.getPointY(angle,(e-start),sh);
         return new SlashSegment(s,nsh,e,neh);
     }
     
@@ -54,18 +58,49 @@ public class SlashSegment implements ISegment{
             if(ssA.getEnd()>ssB.getEnd()){
                 res.segALeft=ssA.subSeg(ssB.getEnd(), ssA.getEnd());
                 res.segBLeft=null;
+                ssA=(SlashSegment) ssA.subSeg(ssA.getStart(), e);
             }else if(ssA.getEnd()==ssB.getEnd()){
                 res.segALeft=null;
                 res.segBLeft=null;
             }else{
                 res.segALeft=null;
                 res.segBLeft=ssB.subSeg(ssA.getEnd(), ssB.getEnd());
+                ssB=(SlashSegment) ssB.subSeg(ssB.getStart(), e);
             }
+            res.result=new ArrayList<ISegment>();
             if(isEqual(ssA.getAngle(),ssB.getAngle())){
-                res.result=new SlashSegment(ssA.getStart(), Math.max(ssA.sh, ssB.sh), 
-                                e, get(ssA.getAngle(), e-ssA.getStart(), Math.max(ssA.sh, ssB.sh)));
+            	double base=Math.max(ssA.sh, ssB.sh);
+                res.result.add(new SlashSegment(ssA.getStart(), base, 
+                                e, Algebra.getPointY(ssA.getAngle(), e-ssA.getStart(), base)));
+            }else if(ssA.sh==ssB.sh){
+            	if(ssA.eh>ssB.eh){
+            		res.result.add(ssA);
+            	}else{
+            		res.result.add(ssB);
+            	}
+            }else if(ssA.eh==ssB.eh){
+            	if(ssA.sh>ssB.sh){
+            		res.result.add(ssA);
+            	}else{
+            		res.result.add(ssB);
+            	}
+            }else if(ssA.sh>ssB.sh && ssA.eh>ssB.eh){
+            	res.result.add(ssA);
+            }else if(ssA.sh<ssB.sh && ssA.eh<ssB.eh){
+            	res.result.add(ssB);
             }else{
-                //calculate the cross point
+            	Point crossP=Algebra.getCrossPoint(
+            			new Point(ssA.getStart(),ssA.sh),
+            			new Point(ssA.getEnd(), ssA.eh),
+            			new Point(ssB.getStart(),ssB.sh),
+            			new Point(ssB.getEnd(),ssB.eh));
+            	if(ssA.sh>ssB.sh){
+            		res.result.add(new SlashSegment(ssA.getStart(), ssA.sh, crossP.x, crossP.y));
+            		res.result.add(new SlashSegment(crossP.x, crossP.y, ssB.getEnd(), ssB.eh));
+            	}else{
+            		res.result.add(new SlashSegment(ssB.getStart(), ssB.sh, crossP.x, crossP.y));
+            		res.result.add(new SlashSegment(crossP.x, crossP.y, ssA.getEnd(), ssA.eh));
+            	}
             }
             return res;
         }
@@ -92,9 +127,6 @@ public class SlashSegment implements ISegment{
     
     private static boolean isEqual(double d1,double d2){
         return Math.abs(d1-d2)<=0.000001;
-    }
-    private static double get(double angle, double length, double base){
-        return angle*length+base;
     }
     
     private double getAngle(){

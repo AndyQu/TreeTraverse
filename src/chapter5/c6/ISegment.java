@@ -1,5 +1,7 @@
 package chapter5.c6;
 
+import java.util.List;
+
 public interface ISegment {
     public double getStart();
     public double getEnd();
@@ -12,7 +14,7 @@ public interface ISegment {
         public ISegment concatenate(ISegment sA,ISegment sB);
     }
     public class Bean{
-        public ISegment result;
+        public List<ISegment> result;
         public ISegment segALeft;
         public ISegment segBLeft;
     }

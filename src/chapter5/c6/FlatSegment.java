@@ -1,5 +1,7 @@
 package chapter5.c6;
 
+import java.util.ArrayList;
+
 import andy.util.Log;
 
 public class FlatSegment implements ISegment{
@@ -40,16 +42,17 @@ public class FlatSegment implements ISegment{
                 return null;
             }
             ISegment.Bean result=new Bean();
+            result.result=new ArrayList<ISegment>();
             if(sA.getEnd()==sB.getEnd()){
-                result.result= new FlatSegment(Math.max(((FlatSegment)sA).height,((FlatSegment)sB).height), sA.getStart(), sA.getEnd());
+                result.result.add(new FlatSegment(Math.max(((FlatSegment)sA).height,((FlatSegment)sB).height), sA.getStart(), sA.getEnd()));
                 result.segALeft=null;
                 result.segBLeft=null;
             }else if(sA.getEnd()>sB.getEnd()){
-                result.result= new FlatSegment(Math.max(((FlatSegment)sA).height,((FlatSegment)sB).height), sA.getStart(), sB.getEnd());
+                result.result.add(new FlatSegment(Math.max(((FlatSegment)sA).height,((FlatSegment)sB).height), sA.getStart(), sB.getEnd()));
                 result.segALeft=sA.subSeg(sB.getEnd(), sA.getEnd());
                 result.segBLeft=null;
             }else{
-                result.result= new FlatSegment(Math.max(((FlatSegment)sA).height,((FlatSegment)sB).height), sA.getStart(), sA.getEnd());
+                result.result.add(new FlatSegment(Math.max(((FlatSegment)sA).height,((FlatSegment)sB).height), sA.getStart(), sA.getEnd()));
                 result.segALeft=null;
                 result.segBLeft=sB.subSeg(sA.getEnd(), sB.getEnd());
             }

@@ -244,7 +244,7 @@ public class SkyLine {
         
         while(segA!=null && segB!=null){
             ISegment.Bean result=SegTool.tool.merge(segA, segB);
-            segments.add(result.result);
+            segments.addAll(result.result);
             if(result.segALeft==null){
                 if(indexA<sky1.segments.size()){
                     segA=sky1.segments.get(indexA);
