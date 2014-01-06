@@ -6,7 +6,7 @@ import java.util.List;
 import andy.util.Log;
 
 public class SkyLine {
-    private int start;
+    private double start;
     private List<ISegment> segments;
 
     public static SkyLine merge(SkyLine...skys){
@@ -43,7 +43,7 @@ public class SkyLine {
 
     }
 
-    private SkyLine(int start) {
+    private SkyLine(double start) {
         this.start = start;
     }
 
@@ -54,13 +54,13 @@ public class SkyLine {
         segments.add(seg);
     }
 
-    public SkyLine(int start, int height,int end){
+    public SkyLine(double start, double height,double end){
         this.start=start;
         segments=new ArrayList<ISegment>();
-        segments.add(new Segment(height,start, end));
+        segments.add(new FlatSegment(height,start, end));
     }
     
-    public SkyLine(int start, List<ISegment>segs){
+    public SkyLine(double start, List<ISegment>segs){
         this.start=start;
         segments=segs;
     }
@@ -73,11 +73,11 @@ public class SkyLine {
         Log.en("]");
     }
 
-    private int getEndPoint() {
+    private double getEndPoint() {
         return segments.get(segments.size() - 1).getEnd();
     }
 
-    private SkyLine getSubSkyLine(int s, int e) {
+    private SkyLine getSubSkyLine(double s, double e) {
         if (!(s < e && this.start <= s && e <= getEndPoint())) {
             Log.en("[getSubSkyLine]invalid given positions:" + s + "," + e);
             return null;
@@ -116,10 +116,10 @@ public class SkyLine {
     }
 
     public static class Line {
-        public int start;
-        public int end;
+        public double start;
+        public double end;
 
-        public Line(int s, int e) {
+        public Line(double s, double e) {
             start = s;
             end = e;
         }
@@ -139,10 +139,10 @@ public class SkyLine {
      * @return
      */
     private static SkyLine mergeIfNotOverlap(SkyLine skyA, SkyLine skyB) {
-        int s1 = skyA.start;
-        int e1 = skyA.getEndPoint();
-        int s2 = skyB.start;
-        int e2 = skyB.getEndPoint();
+        double s1 = skyA.start;
+        double e1 = skyA.getEndPoint();
+        double s2 = skyB.start;
+        double e2 = skyB.getEndPoint();
         SkyLine merged = null;
         if (e1 == s2 || e2 == s1) {
             merged = concatenate(skyA, skyB);
@@ -175,10 +175,10 @@ public class SkyLine {
      * @return
      */
     private static TripleSlice findPrefixOverlapPostfix(SkyLine skyA, SkyLine skyB) {
-        int s1 = skyA.start;
-        int e1 = skyA.getEndPoint();
-        int s2 = skyB.start;
-        int e2 = skyB.getEndPoint();
+        double s1 = skyA.start;
+        double e1 = skyA.getEndPoint();
+        double s2 = skyB.start;
+        double e2 = skyB.getEndPoint();
         SkyLine prefix = null;
         Line overlap = null;
         SkyLine postfix = null;
@@ -235,7 +235,7 @@ public class SkyLine {
             Log.en("[smerge]two skylines don't have the same scope. quit.");
             return null;
         }
-        int start=sky1.start;
+        double start=sky1.start;
         List<ISegment>segments=new ArrayList<ISegment>();
         ISegment segA=sky1.segments.get(0);
         int indexA=1;
