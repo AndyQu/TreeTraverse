@@ -68,39 +68,31 @@ public class SlashSegment implements ISegment{
                 ssB=(SlashSegment) ssB.subSeg(ssB.getStart(), e);
             }
             res.result=new ArrayList<ISegment>();
-            if(isEqual(ssA.getAngle(),ssB.getAngle())){
-            	double base=Math.max(ssA.sh, ssB.sh);
+            
+            Point crossP=Algebra.getCrossPoint(
+                            new Point(ssA.getStart(),ssA.sh),
+                            new Point(ssA.getEnd(), ssA.eh),
+                            new Point(ssB.getStart(),ssB.sh),
+                            new Point(ssB.getEnd(),ssB.eh));
+            if(crossP==null){
+                double base=Math.max(ssA.sh, ssB.sh);
                 res.result.add(new SlashSegment(ssA.getStart(), base, 
                                 e, Algebra.getPointY(ssA.getAngle(), e-ssA.getStart(), base)));
-            }else if(ssA.sh==ssB.sh){
-            	if(ssA.eh>ssB.eh){
-            		res.result.add(ssA);
-            	}else{
-            		res.result.add(ssB);
-            	}
-            }else if(ssA.eh==ssB.eh){
-            	if(ssA.sh>ssB.sh){
-            		res.result.add(ssA);
-            	}else{
-            		res.result.add(ssB);
-            	}
-            }else if(ssA.sh>ssB.sh && ssA.eh>ssB.eh){
-            	res.result.add(ssA);
-            }else if(ssA.sh<ssB.sh && ssA.eh<ssB.eh){
-            	res.result.add(ssB);
+            }else if(crossP.x<=ssA.getStart() || crossP.x>=ssA.getEnd()){
+                //cross point is not in (start, end)
+                if(ssA.sh>=ssB.sh){
+                    res.result.add(ssA);
+                }else{
+                    res.result.add(ssB);
+                }
             }else{
-            	Point crossP=Algebra.getCrossPoint(
-            			new Point(ssA.getStart(),ssA.sh),
-            			new Point(ssA.getEnd(), ssA.eh),
-            			new Point(ssB.getStart(),ssB.sh),
-            			new Point(ssB.getEnd(),ssB.eh));
-            	if(ssA.sh>ssB.sh){
-            		res.result.add(new SlashSegment(ssA.getStart(), ssA.sh, crossP.x, crossP.y));
-            		res.result.add(new SlashSegment(crossP.x, crossP.y, ssB.getEnd(), ssB.eh));
-            	}else{
-            		res.result.add(new SlashSegment(ssB.getStart(), ssB.sh, crossP.x, crossP.y));
-            		res.result.add(new SlashSegment(crossP.x, crossP.y, ssA.getEnd(), ssA.eh));
-            	}
+                if(ssA.sh>ssB.sh){
+                    res.result.add(new SlashSegment(ssA.getStart(), ssA.sh, crossP.x, crossP.y));
+                    res.result.add(new SlashSegment(crossP.x, crossP.y, ssB.getEnd(), ssB.eh));
+                }else{
+                    res.result.add(new SlashSegment(ssB.getStart(), ssB.sh, crossP.x, crossP.y));
+                    res.result.add(new SlashSegment(crossP.x, crossP.y, ssA.getEnd(), ssA.eh));
+                }
             }
             return res;
         }
